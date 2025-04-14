@@ -19,9 +19,25 @@ export const uploadBook = createAsyncThunk(
   "uploadBook",
   async (formData, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:8080/api/upload-book",
-          formData, {headers : {"Content-Type": "multipart/form-data"}});
-      console.log(response.data);
+      const response = await axios.post(
+        "http://localhost:8080/api/upload-book",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+
+      return response.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+
+//fetching data using id
+export const fetchBookDetail = createAsyncThunk(
+  "fetchBookDetail",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios(`http://localhost:8080/api/book/${id}`);
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -52,19 +68,32 @@ const booksSlice = createSlice({
         state.errorMsg = action.payload || "Failed to fetch books";
         state.isError = true;
       })
-    //Adding cases for uploading books
-    .addCase(uploadBook.pending, (state) => {
-      state.isLoading = true;
-    })
-        .addCase(uploadBook.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.books = action.payload;
-        })
-        .addCase(uploadBook.rejected, (state, action) => {
-          state.isLoading = false;
-          state.errorMsg = action.payload || "Failed to fetch rejected";
-          state.isError = true;
-        })
+      //Adding cases for uploading books
+      .addCase(uploadBook.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadBook.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.books = action.payload;
+      })
+      .addCase(uploadBook.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMsg = action.payload || "Failed to fetch rejected";
+        state.isError = true;
+      })
+      //fetching details of a card
+      .addCase(fetchBookDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchBookDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.books = action.payload;
+      })
+      .addCase(fetchBookDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMsg = action.payload || "Failed to fetch rejected";
+        state.isError = true;
+      });
   },
 });
 

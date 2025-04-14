@@ -3,8 +3,8 @@ import TabletMenu from "./TabletMenu.jsx";
 import { useContext, useState } from "react";
 import { ContextApp } from "../contextapi/ContextApi.jsx";
 import BookLogo from "../assets/books.svg";
-import {uploadBook} from "../Redux/slices/BooksSlice.js";
-import {useDispatch} from "react-redux";
+import { uploadBook } from "../Redux/slices/BooksSlice.js";
+import { useDispatch } from "react-redux";
 
 const UploadBook = () => {
   const { mobileMenuOpen, theme } = useContext(ContextApp);
@@ -31,11 +31,11 @@ const UploadBook = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {title ,author ,description ,category,avatar} = formData;
-    if(!title || !author || !description || !category ||!avatar) {
-      setFormError(true)
+    const { title, author, description, category, avatar } = formData;
+    if (!title || !author || !description || !category || !avatar) {
+      setFormError(true);
       return;
-    };
+    }
 
     const data = new FormData();
     data.append("title", title);
@@ -43,21 +43,20 @@ const UploadBook = () => {
     data.append("description", description);
     data.append("category", category);
     data.append("avatar", avatar);
-    try{
-      await dispatch(uploadBook(data))
+    try {
+      await dispatch(uploadBook(data));
       setFormData({
         title: "",
         author: "",
         description: "",
         category: "",
         avatar: null,
-      })
-    }catch(err){
+      });
+    } catch (err) {
       console.log(err);
-    }finally {
+    } finally {
       setFormError(false);
     }
-
   };
   return (
     <div className="relative flex flex-col md:flex-row justify-center items-center">
@@ -75,8 +74,8 @@ const UploadBook = () => {
         </p>
       </div>
       <p
-          className="text-4xl font-bold font-italic text-center md:hidden"
-          style={{ color: theme ? "black" : "white" }}
+        className="text-4xl font-bold font-italic text-center md:hidden"
+        style={{ color: theme ? "black" : "white" }}
       >
         Today a reader, tomorrow a leader.
       </p>
@@ -102,7 +101,7 @@ const UploadBook = () => {
               type="text"
               value={formData.title}
               onChange={handleChange}
-              name = "title"
+              name="title"
               className="h-8 w-64 px-3 rounded-sm"
               style={{ border: theme ? "1px solid black" : "1px solid white" }}
             />
@@ -124,7 +123,7 @@ const UploadBook = () => {
             <input
               type="text"
               value={formData.category}
-              name='category'
+              name="category"
               onChange={handleChange}
               className="h-8 w-64 px-3 rounded-sm"
               style={{ border: theme ? "1px solid black" : "1px solid white" }}
@@ -134,7 +133,7 @@ const UploadBook = () => {
             <label className="h-8 text-normal font-semibold">Avatar :</label>
             <input
               type="file"
-              name={'avatar'}
+              name={"avatar"}
               onChange={handleChange}
               className="h-8 w-64 px-3 rounded-sm"
               style={{ border: theme ? "1px solid black" : "1px solid white" }}
@@ -147,18 +146,26 @@ const UploadBook = () => {
             <textarea
               onChange={handleChange}
               value={formData.description}
-              name='description'
+              name="description"
               className="h-full w-64 px-3 rounded-sm"
               style={{ border: theme ? "1px solid black" : "1px solid white" }}
             />
           </div>
-          {formError && (<p className=" text-red-500 font-normal text-center">All fields are required</p>)}
+          {formError && (
+            <p className=" text-red-500 font-normal text-center">
+              All fields are required
+            </p>
+          )}
           <div className="px-2 flex justify-between items-center h-10">
             <button
               type="submit"
               className="w-full bg-blue-500 text-white h-8 rounded-md hover:cursor-pointer hover:bg-blue-700"
             >
-              {uploading ? <CircularProgress size={20} color="inherit" /> : "Submit"}
+              {uploading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
         </form>
