@@ -4,9 +4,24 @@ import axios from "axios";
 //fetching all books data
 export const fetchBooks = createAsyncThunk(
   "fetchBooks",
-  async (_, thunkAPI) => {
+  async (category, thunkAPI) => {
     try {
-      const response = await axios("http://localhost:8080/api/books");
+      const response = await axios(`http://localhost:8080/api/books`);
+      return response.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+
+//fetching Category books data
+export const fetchCategoryBooks = createAsyncThunk(
+  "fetchCategoryBooks",
+  async (category, thunkAPI) => {
+    try {
+      const response = await axios(
+        `http://localhost:8080/api/books?category=${category}`,
+      );
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -49,6 +64,8 @@ const booksSlice = createSlice({
   name: "books",
   initialState: {
     books: [],
+    categoryBook: [],
+    detailedBook: null,
     isLoading: true,
     isError: false,
     errorMsg: "",
@@ -87,9 +104,25 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBookDetail.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.books = action.payload;
+        state.detailedBook = action.payload;
+        localStorage.setItem("book", JSON.stringify(action.payload));
       })
       .addCase(fetchBookDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMsg = action.payload || "Failed to fetch rejected";
+        state.isError = true;
+      })
+
+      //fetch Category books
+
+      .addCase(fetchCategoryBooks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchCategoryBooks.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.categoryBook = action.payload;
+      })
+      .addCase(fetchCategoryBooks.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMsg = action.payload || "Failed to fetch rejected";
         state.isError = true;
