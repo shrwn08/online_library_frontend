@@ -40,7 +40,7 @@ const BrowseBooks = () => {
         <div className="flex justify-start items-center">
           <p className="text-left text-3xl font-bold">All Books</p>
         </div>
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-center items-center gap-3 flex-wrap">
           {["Fiction", "Anime", "Si-Fi", "Romance", "Fantasy", "Horror"].map(
             (item, i) => (
               <button

@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+const config = 'https://online-library-backend-y46c.onrender.com';
+
 //fetching all books data
 export const fetchBooks = createAsyncThunk(
   "fetchBooks",
   async (category, thunkAPI) => {
     try {
-      const response = await axios(`http://localhost:8080/api/books`);
+      const response = await axios(`${config}/api/books`);
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -20,7 +23,7 @@ export const fetchCategoryBooks = createAsyncThunk(
   async (category, thunkAPI) => {
     try {
       const response = await axios(
-        `http://localhost:8080/api/books?category=${category}`,
+        `${config}/api/books?category=${category}`,
       );
       return response.data;
     } catch (err) {
@@ -35,7 +38,7 @@ export const uploadBook = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/upload-book",
+        `${config}/api/upload-book`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } },
       );
@@ -52,7 +55,7 @@ export const fetchBookDetail = createAsyncThunk(
   "fetchBookDetail",
   async (id, thunkAPI) => {
     try {
-      const response = await axios(`http://localhost:8080/api/book/${id}`);
+      const response = await axios(`${config}/api/book/${id}`);
       return response.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
